@@ -131,6 +131,7 @@ GEM
       xpath (~> 3.2)
     childprocess (5.1.0)
       logger (~> 1.5)
+    chronic (0.10.2)
     chunky_png (1.4.0)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.0)
@@ -456,6 +457,7 @@ GEM
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.1.6)
+    stripe (13.5.0)
     tailwindcss-rails (4.2.1)
       railties (>= 7.0.0)
       tailwindcss-ruby (~> 4.0)
@@ -501,6 +503,8 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    whenever (1.0.0)
+      chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.2)
@@ -562,12 +566,14 @@ DEPENDENCIES
   solid_cache
   solid_queue
   stimulus-rails (~> 1.0, >= 1.0.2)
+  stripe (~> 13.0)
   tailwindcss-rails (~> 4.0)
   thruster
   turbo-rails (~> 2.0.3)
   tzinfo-data
   web-console (>= 4.1.0)
   webmock
+  whenever (~> 1.0)
 
 CHECKSUMS
   actioncable (8.0.2) sha256=7bcce2df62e91a80143592600e16583c273e98aab50ae40a9f6a2604bb3289a0
@@ -595,6 +601,7 @@ CHECKSUMS
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
   childprocess (5.1.0) sha256=9a8d484be2fd4096a0e90a0cd3e449a05bc3aa33f8ac9e4d6dcef6ac1455b6ec
+  chronic (0.10.2) sha256=766f2fcce6ac3cc152249ed0f2b827770d3e517e2e87c5fba7ed74f4889d2dc3
   chunky_png (1.4.0) sha256=89d5b31b55c0cf4da3cf89a2b4ebc3178d8abe8cbaf116a1dba95668502fdcfe
   concurrent-ruby (1.3.5) sha256=813b3e37aca6df2a21a3b9f1d497f8cbab24a2b94cab325bffe65ee0f6cbebc6
   connection_pool (2.5.0) sha256=233b92f8d38e038c1349ccea65dd3772727d669d6d2e71f9897c8bf5cd53ebfc
@@ -734,6 +741,7 @@ CHECKSUMS
   sshkit (1.24.0) sha256=9597c1f984778ae9742f2dc839778d57a6a2efb868107046575c52ac7c628e6c
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
   stringio (3.1.6) sha256=292c495d1657adfcdf0a32eecf12a60e6691317a500c3112ad3b2e31068274f5
+  stripe (13.5.0) sha256=a009e71b5b8f58596ba0197775ed760aaa06be8d0f61b5f3c8a3bac20812cbf5
   tailwindcss-rails (4.2.1) sha256=ce66cd3e322fd74b13391db248a5e905ac6d80b6de8d2a9139eff65596e2c234
   tailwindcss-ruby (4.0.17) sha256=d5ccc25ce101185d9b085d919e6083c15d9c9254a8e7918b2071a55cbc8883bb
   tailwindcss-ruby (4.0.17-aarch64-linux-gnu) sha256=1176a604c0637adde6b67b3ff17786a0102cd6285e160f0717bca0fd7611f916
@@ -762,6 +770,7 @@ CHECKSUMS
   websocket (1.2.11) sha256=b7e7a74e2410b5e85c25858b26b3322f29161e300935f70a0e0d3c35e0462737
   websocket-driver (0.7.7) sha256=056d99f2cd545712cfb1291650fde7478e4f2661dc1db6a0fa3b966231a146b4
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
+  whenever (1.0.0) sha256=d9b71417c43960f5eb125b77207174cba4691091cedae0d282a29cfc72eaa246
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   zeitwerk (2.7.2) sha256=842e067cb11eb923d747249badfb5fcdc9652d6f20a1f06453317920fdcd4673
 
