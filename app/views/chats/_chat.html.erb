@@ -1,9 +1,15 @@
 <div id="<%= dom_id chat %>">
   <div class="mb-4">
-    <p class="text-sm font-medium text-gray-500">Title</p>
-    <%= chat.title %>
+    <% if action_name != "show" %>
+      <%= link_to chat, class: "btn btn-secondary" do %>
+        <%= chat.title %>
+      <% end %>
+    <% else %>
+      <%= chat.title %>
+    <% end %>
   </div>
-  <% if action_name != "show" %>
-    <%= link_to "View this chat", chat, class: "btn btn-secondary" %>
-  <% end %>
+
+  <div>
+    <%= render partial: "messages/message", collection: @chat.messages, as: :message, cached: true %>
+  </div>
 </div>

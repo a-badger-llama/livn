@@ -1,0 +1,19 @@
+<%= form_with(model: message) do |form| %>
+  <%= render "error_messages", resource: form.object %>
+  <%= form.hidden_field :chat_id, value: 1, class: "form-control" %>
+
+  <div class="form-group">
+    <%= form.label :content %>
+    <%= form.textarea :content, class: "form-control" %>
+  </div>
+
+  <div>
+    <%= form.button button_text(form.send(:submit_default_value)), class: "btn btn-primary" %>
+
+    <% if form.object.new_record? %>
+      <%= link_to t("cancel"), messages_path, class: "btn btn-secondary" %>
+    <% else %>
+      <%= link_to t("cancel"), message_path(@message), class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+<% end %>
