@@ -1,0 +1,9 @@
+<div id="<%= dom_id chat %>">
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Title</p>
+    <%= chat.title %>
+  </div>
+  <% if action_name != "show" %>
+    <%= link_to "View this chat", chat, class: "btn btn-secondary" %>
+  <% end %>
+</div>
