@@ -1,33 +1,21 @@
-<%= content_for :title, "Chats" %>
-<%= turbo_stream_from :chats %>
+<div class="flex h-screen">
+  <!-- Sidebar for Chats -->
 
-<div class="container px-4 mx-auto my-8">
-  <div class="flex items-center justify-between mb-4">
-    <div>
-      <h1 class="h3">Chats</h1>
 
-      <div class="text-sm font-medium">
-        <span class="text-gray-500 dark:text-gray-300/75">Sort by:</span>
-        <%= sortable @chats, :title, "Title", class: "text-gray-700 dark:text-gray-300 mr-1" %>
-        <%= sortable @chats, :user_id, "User", class: "text-gray-700 dark:text-gray-300 mr-1" %>
+  <!-- Main Container for Messages -->
+  <div class="flex-1 bg-white dark:bg-gray-900 overflow-y-auto">
+    <% if @chat %>
+      <h2 class="p-4 text-lg font-bold"><%= @chat.title %></h2>
+      <div class="p-4 space-y-4">
+        <%= render partial: "messages/message", collection: @chat.messages, as: :message %>
       </div>
-    </div>
-
-    <%= link_to t("scaffold.new.title", model: "Chat"), new_chat_path, class: "btn btn-secondary" %>
+      <div class="p-4">
+        <%= render "messages/form", message: @chat.messages.build %>
+      </div>
+    <% else %>
+      <div class="p-4 text-center">
+        <p class="text-gray-500">Select a chat to view messages.</p>
+      </div>
+    <% end %>
   </div>
-
-  <%= tag.div id: ("chats" if first_page?), class: "bg-white dark:bg-gray-900 dark:border dark:border-gray-700 rounded-md shadow p-6 space-y-8" do %>
-    <%= render partial: "chats/chat", collection: @chats, as: :chat, cached: true %>
-
-    <div class="hidden only:block text-center">
-      <p class="mb-4 h3">Create your first Chat</p>
-      <%= link_to t("scaffold.new.title", model: "Chat"), new_chat_path, class: "btn btn-primary" %>
-    </div>
-  <% end %>
-
-  <% if @pagy.pages > 1 %>
-    <div class="my-6 text-center">
-      <%== pagy_nav(@pagy) %>
-    </div>
-  <% end %>
 </div>

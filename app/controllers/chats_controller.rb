@@ -4,6 +4,7 @@ class ChatsController < ApplicationController
   # GET /chats
   def index
     @pagy, @chats = pagy(Chat.sort_by_params(params[:sort], sort_direction))
+    @chat = Chat.find_by(id: params[:chat_id]) if params[:chat_id].present?
   end
 
   # GET /chats/1 or /chats/1.json

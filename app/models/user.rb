@@ -10,6 +10,7 @@ class User < ApplicationRecord
   include Theme
 
   has_one_attached :avatar
+  has_many :chats
   has_person_name
 
   validates :avatar, resizable_image: true
