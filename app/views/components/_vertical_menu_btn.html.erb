@@ -1,0 +1,17 @@
+<div>
+  <button type="button" data-action="click->toggle#toggle touch->toggle#toggle">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zm0 5.25a.75.75 0 110-1.5.75.75 0 010 1.5zm0 5.25a.75.75 0 110-1.5.75.75 0 010 1.5z" />
+    </svg>
+  </button>
+
+  <div class="fixed top-0 right-0 flex flex-col hidden" data-toggle-target="toggleable">
+    <div class="flex items-center justify-between">
+      <h1 class="h3">Vertical Menu</h1>
+      <%= link_to "Edit", edit_chat_path(@chat), class: "nav-link" %>
+    </div>
+    <div class="mt-4">
+      <%= render @chat %>
+    </div>
+  </div>
+</div>
