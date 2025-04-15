@@ -1,19 +1,41 @@
 <!DOCTYPE html>
 <html class="<%= class_names(dark: current_user&.dark_theme?, "hotwire-native": hotwire_native_app?) %>" lang="<%= I18n.locale %>">
-  <head>
-    <%= render "head" %>
-  </head>
-  <body data-controller="theme bridge--menu-button <%= "bridge--notification-token" if user_signed_in? %>" data-theme-preference-value="<%= current_user&.theme %>">
-    <header>
-      <%= impersonation_banner %>
-      <%= render "flash" %>
-      <%= render "navbar" %>
-    </header>
+<head>
+  <%= render "head" %>
+</head>
+<body data-controller="theme bridge--menu-button <%= "bridge--notification-token" if user_signed_in? %>" data-theme-preference-value="<%= current_user&.theme %>">
+<header>
+  <%= impersonation_banner %>
+  <%= render "flash" %>
 
-    <main>
-      <%= yield %>
-    </main>
+  <%= content_for :header %>
+</header>
 
-    <%= render "footer" unless hotwire_native_app? %>
-  </body>
+<main class="flex h-screen">
+  <section class="flex flex-col w-1/4 max-w-xs bg-gray-900 overflow-y-auto">
+    <div class="flex self-end px-4 py-2">
+      <%= nav_link_to "New Chat", new_chat_path, class: "px-4 nav-link dark:text-gray-300 rounded-lg" %>
+    </div>
+
+    <div class="flex px-4 border-b border-gray-700">
+      <%= nav_link_to "Dashboard", root_path, class: "flex-grow nav-link dark:text-gray-300 rounded-lg" %>
+    </div>
+
+    <% @chats.each do |chat| %>
+      <div class="flex px-4">
+        <%= nav_link_to chat_path(chat), class: "nav-link flex-grow dark:text-gray-300 rounded-lg" do %>
+          <%= chat.title %>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+
+  <div class="flex-grow bg-white dark:bg-gray-800 px-4 py-2 overflow-y-auto">
+    <%= render "navbar" %>
+    <%= yield %>
+  </div>
+</main>
+
+<%= render "footer" unless hotwire_native_app? %>
+</body>
 </html>

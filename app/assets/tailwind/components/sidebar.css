@@ -1,0 +1,8 @@
+.nav-link {
+  padding: 0.5rem 1rem;
+
+  &.active {
+    background: var(--base-bg-hover);
+    color: var(--text-primary);
+  }
+}

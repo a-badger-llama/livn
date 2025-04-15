@@ -44,3 +44,7 @@
 @import "./components/typography.css" layer(components);
 @import "./components/wells.css" layer(components);
 @import "./components/braintree.css" layer(components);
+
+/* my stylesheets */
+@import "./components/section_header.css" layer(components);
+@import "./components/sidebar.css" layer(components);

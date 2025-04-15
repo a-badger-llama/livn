@@ -9,6 +9,10 @@ class ChatsController < ApplicationController
 
   # GET /chats/1 or /chats/1.json
   def show
+    chat_id = params[:chat_id] || params[:id]
+
+    @pagy, @chats = pagy(Chat.sort_by_params(params[:sort], sort_direction))
+    @chat = Chat.find_by(id: chat_id)
   end
 
   # GET /chats/new

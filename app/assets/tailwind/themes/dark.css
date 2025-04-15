@@ -99,7 +99,7 @@
   --base-border-tertiary: var(--color-gray-600);
   --base-border-focus: var(--color-blue-800);
   --base-bg-selected: var(--color-blue-900);
-  --base-bg-hover: var(--color-blue-950);
+  --base-bg-hover: var(--color-gray-700);
   --base-bg-tooltip: var(--color-gray-700);
   --base-text-on-tooltip: var(--color-gray-50);
 
