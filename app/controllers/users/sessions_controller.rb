@@ -1,6 +1,8 @@
 class Users::SessionsController < Devise::SessionsController
   include Devise::Controllers::Rememberable
 
+  layout "static"
+
   # We need to intercept the Sessions#create action for processing OTP
   prepend_before_action :authenticate_with_two_factor, only: [:create]
 

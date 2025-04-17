@@ -6,9 +6,8 @@
 <body data-controller="theme bridge--menu-button <%= "bridge--notification-token" if user_signed_in? %>" data-theme-preference-value="<%= current_user&.theme %>">
 <header>
   <%= impersonation_banner %>
+  <%= render "navbar" %>
   <%= render "flash" %>
-
-  <%= content_for :header %>
 </header>
 
 <main>

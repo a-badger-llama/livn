@@ -1,16 +1,16 @@
 <section class="flex flex-col w-1/4 max-w-xs bg-gray-900 overflow-y-auto">
   <div class="flex self-end px-4 py-2">
-    <%= nav_link_to "New Chat", new_chat_path, class: "px-4 nav-link dark:text-gray-300 rounded-lg" %>
+    <%= nav_link_to "New Chat", new_chat_path, class: "px-4 nav-link dark:text-gray-300 rounded-lg hover:bg-neutral-800" %>
   </div>
 
   <div class="flex px-4 my-4">
-    <%= nav_link_to "Dashboard", root_path, class: "flex-grow nav-link dark:text-gray-300 rounded-lg" %>
+    <%= nav_link_to "Dashboard", root_path, class: "flex-grow nav-link dark:text-gray-300 rounded-lg hover:bg-neutral-800" %>
   </div>
 
   <h2 class="text-gray-400 text-base px-4">Chats</h2>
   <% chats.each do |chat| %>
     <div class="flex px-4">
-      <%= nav_link_to chat_path(chat), class: "nav-link flex-grow dark:text-gray-300 rounded-lg" do %>
+      <%= nav_link_to chat_path(chat), class: "nav-link flex-grow dark:text-gray-300 rounded-lg hover:bg-neutral-800" do %>
         <%= chat.title %>
       <% end %>
     </div>

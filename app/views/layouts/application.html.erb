@@ -6,16 +6,14 @@
 <body data-controller="theme bridge--menu-button <%= "bridge--notification-token" if user_signed_in? %>" data-theme-preference-value="<%= current_user&.theme %>">
 <header>
   <%= impersonation_banner %>
-
-  <%= content_for :header %>
 </header>
 
 <main class="flex h-screen">
   <%= render "sidebar", chats: @chats || current_user.chats %>
 
-  <div class="flex-grow bg-white dark:bg-gray-800 px-4 py-2 overflow-y-auto">
+  <div class="flex flex-grow flex-col px-4 overflow-y-auto">
+    <%= render "main_header" %>
     <%= render "flash" %>
-    <%= render "navbar" %>
     <%= yield %>
   </div>
 </main>
