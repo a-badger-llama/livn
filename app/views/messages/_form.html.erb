@@ -1,19 +1,17 @@
-<%= form_with(model: message) do |form| %>
+<%= form_with(model: message, url: chat_messages_path(chat_id: message.chat)) do |form| %>
   <%= render "error_messages", resource: form.object %>
-  <%= form.hidden_field :chat_id, value: 1, class: "form-control" %>
 
-  <div class="form-group">
-    <%= form.label :content %>
-    <%= form.textarea :content, class: "form-control" %>
-  </div>
+  <div class="flex flex-col p-2 bg-gray-700 rounded-3xl">
+    <%= form.textarea :content, class: "ring-0 resize-none bg-transparent border-none w-full text-white placeholder:text-white", placeholder: "Ask anything" %>
 
-  <div>
-    <%= form.button button_text(form.send(:submit_default_value)), class: "btn btn-primary" %>
-
-    <% if form.object.new_record? %>
-      <%= link_to t("cancel"), messages_path, class: "btn btn-secondary" %>
-    <% else %>
-      <%= link_to t("cancel"), message_path(@message), class: "btn btn-secondary" %>
-    <% end %>
+    <div class="flex justify-end">
+      <%= form.button class: "bg-white text-gray-700 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer" do %>
+        <%= button_text do %>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+          </svg>
+        <% end %>
+      <% end %>
+    </div>
   </div>
 <% end %>

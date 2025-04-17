@@ -21,7 +21,7 @@ class MessagesController < ApplicationController
 
   # POST /messages or /messages.json
   def create
-    @message = Message.new(message_params.merge(user_id: current_user.id, role: "user"))
+    @message = Message.new(message_params.merge(user_id: current_user.id, role: "user", chat_id: params[:chat_id]))
 
     respond_to do |format|
       if @message.save
@@ -67,6 +67,6 @@ class MessagesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def message_params
-    params.expect(message: [ :chat_id, :content ])
+    params.expect(message: [:content])
   end
 end

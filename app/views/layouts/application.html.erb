@@ -11,7 +11,7 @@
 <main class="flex h-screen">
   <%= render "sidebar", chats: @chats || current_user.chats %>
 
-  <div class="flex flex-grow flex-col px-4 overflow-y-auto">
+  <div class="flex flex-col flex-grow px-4 overflow-y-auto">
     <%= render "main_header" %>
     <%= render "flash" %>
     <%= yield %>

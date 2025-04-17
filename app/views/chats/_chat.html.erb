@@ -1,15 +1,7 @@
-<div id="<%= dom_id chat %>">
-  <div class="mb-4">
-    <% if action_name != "show" %>
-      <%= link_to chat, class: "btn btn-secondary" do %>
-        <%= chat.title %>
-      <% end %>
-    <% else %>
-      <%= chat.title %>
-    <% end %>
-  </div>
-
-  <div>
+<div class="flex flex-col flex-grow container gap-2 px-4 mx-auto my-8 max-w-4xl">
+  <div class="flex flex-col gap-2 flex-grow" id="<%= dom_id chat %>">
     <%= render partial: "messages/message", collection: @chat.messages, as: :message, cached: true %>
   </div>
+
+    <%= render "messages/form", message: @chat.messages.build %>
 </div>
