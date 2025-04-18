@@ -4,20 +4,20 @@
   <%= render "head" %>
 </head>
 <body data-controller="theme bridge--menu-button <%= "bridge--notification-token" if user_signed_in? %>" data-theme-preference-value="<%= current_user&.theme %>">
-<header>
-  <%= impersonation_banner %>
-</header>
+<!--<header>-->
+  <%#= impersonation_banner %>
+<!--</header>-->
 
 <main class="flex h-screen">
   <%= render "sidebar", chats: @chats || current_user.chats %>
 
-  <div class="flex flex-col flex-grow px-4 overflow-y-auto">
+  <div class="flex flex-col flex-grow px-4">
     <%= render "main_header" %>
-    <%= render "flash" %>
+
     <%= yield %>
   </div>
 </main>
 
-<%= render "footer" unless hotwire_native_app? %>
+<%#= render "footer" unless hotwire_native_app? %>
 </body>
 </html>

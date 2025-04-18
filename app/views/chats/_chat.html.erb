@@ -1,7 +1,10 @@
-<div class="flex flex-col flex-grow container gap-2 px-4 mx-auto my-8 max-w-4xl">
-  <div class="flex flex-col gap-2 flex-grow" id="<%= dom_id chat %>">
-    <%= render partial: "messages/message", collection: @chat.messages, as: :message, cached: true %>
+<div class="w-full flex flex-col flex-grow overflow-y-auto pt-4" id="<%= dom_id @chat %>" data-controller="chat">
+  <div class="flex flex-grow flex-col gap-2 container mx-auto max-w-4xl">
+    <%= render partial: "messages/message", collection: chat.messages, as: :message, cached: true %>
   </div>
+</div>
 
-    <%= render "messages/form", message: @chat.messages.build %>
+<div id="<%= dom_id chat %>_messages" class="flex flex-col container mx-auto max-w-4xl">
+  <%= render "messages/form", message: chat.messages.build %>
+  <p class="flex w-full justify-center py-1">AI can make mistakes. Please check important info</p>
 </div>

@@ -21,13 +21,16 @@ class MessagesController < ApplicationController
 
   # POST /messages or /messages.json
   def create
+    @chat    = Chat.find(params[:chat_id])
     @message = Message.new(message_params.merge(user_id: current_user.id, role: "user", chat_id: params[:chat_id]))
 
     respond_to do |format|
       if @message.save
+        format.turbo_stream
         format.html { redirect_to @message, notice: "Message was successfully created." }
         format.json { render :show, status: :created, location: @message }
       else
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("message_form", partial: "messages/form", locals: { message: @message }), status: :unprocessable_entity }
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @message.errors, status: :unprocessable_entity }
       end

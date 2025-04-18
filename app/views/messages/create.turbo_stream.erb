@@ -1,0 +1,2 @@
+<%= turbo_stream.append dom_id(@message.chat), partial: "messages/message", locals: { message: @message } %>
+<%= turbo_stream.replace "#{dom_id(@message.chat)}_messages", partial: "messages/form", locals: { message: @chat.messages.build } %>
