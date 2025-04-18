@@ -5,6 +5,7 @@ export default class extends Controller {
   static targets = ["input", "container"]
 
   connect() {
+    this.clearInput()
     this.scrollToBottom()
   }
 
@@ -27,6 +28,12 @@ export default class extends Controller {
     } else {
       const messages = document.querySelector("[data-chat-target='container']")
       if (messages) messages.scrollTop = messages.scrollHeight
+    }
+  }
+
+  clearInput() {
+    if (this.hasInputTarget) {
+      this.inputTarget.value = ""
     }
   }
 }
