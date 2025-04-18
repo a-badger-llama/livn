@@ -1,8 +1,8 @@
 // app/javascript/controllers/chat_controller.js
-import { Controller } from "@hotwired/stimulus"
+import {Controller} from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "messages"]
+  static targets = ["input", "container"]
 
   connect() {
     this.scrollToBottom()
@@ -22,8 +22,11 @@ export default class extends Controller {
   }
 
   scrollToBottom() {
-    if (this.hasMessagesTarget) {
-      this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight
+    if (this.hasContainerTarget) {
+      this.containerTarget.scrollTop = this.containerTarget.scrollHeight
+    } else {
+      const messages = document.querySelector("[data-chat-target='container']")
+      if (messages) messages.scrollTop = messages.scrollHeight
     }
   }
 }

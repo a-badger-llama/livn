@@ -1,8 +1,15 @@
-<%= form_with(model: message, url: chat_messages_path(chat_id: message.chat), id: "#{dom_id(message.chat)}_messages", class: "w-full") do |form| %>
+<%= form_with(model: message, url: chat_messages_path(chat_id: message.chat), id: "#{dom_id(message.chat)}_messages", class: "w-full", data: { controller: "chat" }) do |form| %>
   <%= render "error_messages", resource: form.object %>
 
   <div class="flex flex-col p-2 bg-gray-700 rounded-3xl">
-    <%= form.textarea :content, class: "ring-0 resize-none bg-transparent border-none w-full text-white placeholder:text-white", placeholder: "Ask anything" %>
+    <%= form.textarea :content,
+                      class: "ring-0 resize-none bg-transparent border-none w-full text-white placeholder:text-white",
+                      placeholder: "Ask anything",
+                      rows: 1,
+                      data: {
+                        action: "keydown->chat#handleKeydown input->chat#autoResize",
+                        chat_target: "input",
+                      } %>
 
     <div class="flex justify-end">
       <%= form.button class: "bg-white text-gray-700 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer" do %>
