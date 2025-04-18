@@ -1,4 +1,4 @@
-<%= form_with(model: message, url: chat_messages_path(chat_id: message.chat), class: "w-full") do |form| %>
+<%= form_with(model: message, url: chat_messages_path(chat_id: message.chat), id: "#{dom_id(message.chat)}_messages", class: "w-full") do |form| %>
   <%= render "error_messages", resource: form.object %>
 
   <div class="flex flex-col p-2 bg-gray-700 rounded-3xl">
