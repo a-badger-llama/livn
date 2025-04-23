@@ -1,8 +1,11 @@
 class Message < ApplicationRecord
-  broadcasts_refreshes_to :chat
-
   belongs_to :chat
   belongs_to :user
+
+  broadcasts_to ->(message) { [message.chat, :messages] }, target: ->(message) { "chat_#{message.chat.id}_messages" }
+
+  validates :content, presence: true
+  validates :role, presence: true
 
   enum :role, {
     user: "user",
