@@ -1,6 +1,7 @@
 class Message < ApplicationRecord
   belongs_to :chat
   belongs_to :user
+  has_many :children, class_name: "Message", foreign_key: "parent_id", dependent: :destroy
 
   broadcasts_to ->(message) { [message.chat, :messages] }, target: ->(message) { "chat_#{message.chat.id}_messages" }
 

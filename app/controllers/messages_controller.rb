@@ -29,6 +29,8 @@ class MessagesController < ApplicationController
         format.turbo_stream
         format.html { redirect_to @message, notice: "Message was successfully created." }
         format.json { render :show, status: :created, location: @message }
+
+        get_ai_response(@message)
       else
         format.turbo_stream { render turbo_stream: turbo_stream.replace("message_form", partial: "messages/form", locals: { message: @message }), status: :unprocessable_entity }
         format.html { render :new, status: :unprocessable_entity }
@@ -71,5 +73,26 @@ class MessagesController < ApplicationController
   # Only allow a list of trusted parameters through.
   def message_params
     params.expect(message: [:content])
+  end
+
+  def get_ai_response(message)
+    client = OpenAI::Client.new
+    response = client.responses.create(parameters: {
+                              model: "gpt-3.5-turbo",
+                              input: message.content,
+                              previous_response_id: @chat.ai_messages.last&.response_id
+                            })
+    Message.create!(
+      content: response["output"].first["content"].first["text"],
+      chat_id: message.chat_id,
+      user_id: message.user_id,
+      role: "assistant",
+      model: "gpt-3.5-turbo",
+      parent_id: message.id,
+      response_id: response["id"],
+      response_json: response,
+      status: response["status"],
+      type: AIMessage.name,
+    )
   end
 end
