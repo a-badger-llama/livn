@@ -8,10 +8,28 @@ class Message < ApplicationRecord
   validates :role, presence: true
 
   enum :role, {
-    user: "user",
+    user:      "user",
     assistant: "assistant",
-    system: "system"
+    system:    "system"
+  }
+
+  enum :status, {
+    completed:   "completed",
+    failed:      "failed",
+    in_progress: "in_progress",
+    incomplete:  "incomplete"
+  }
+
+  enum :model, {
+    gpt_3_5_turbo: "gpt-3.5-turbo"
+  }
+
+  enum :type, {
+    AIMessage: "AIMessage",
+    UserMessage: "UserMessage"
   }
 
   validates :role, presence: true
+
+  default_scope { order(created_at: :asc) }
 end

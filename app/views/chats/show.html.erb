@@ -4,9 +4,11 @@
   <%= render "chat_header", chat: @chat %>
 <% end %>
 
-<div class="w-full flex flex-col flex-grow overflow-y-auto py-4" data-chat-target="messages">
+<div class="w-full flex flex-col flex-grow overflow-y-auto pt-4 pb-8" data-chat-target="messages">
   <div id="<%= dom_id(@chat) %>_messages" class="flex flex-grow flex-col gap-2 container mx-auto max-w-4xl">
-    <%= render partial: "messages/message", collection: @chat.messages, as: :message, cached: true %>
+    <% @chat.messages.each do |message| %>
+      <%= render message %>
+    <% end %>
   </div>
 </div>
 
