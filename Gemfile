@@ -79,3 +79,5 @@ eval_gemfile "Gemfile.jumpstart"
 # gem "strong_migrations"
 
 gem "redcarpet", "~> 3.6"
+
+gem "rouge", "~> 4.5"
