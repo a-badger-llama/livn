@@ -8,10 +8,10 @@
   <%#= impersonation_banner %>
 <!--</header>-->
 
-<main class="flex h-screen">
+<main class="flex h-screen max-w-screen">
   <%= render "sidebar", chats: @chats || current_user.chats %>
 
-  <div class="flex flex-col flex-grow px-4" data-controller="chat">
+  <div class="flex flex-col flex-grow w-full px-4" data-controller="chat">
     <%= render "main_header" %>
 
     <%= yield %>

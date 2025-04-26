@@ -81,3 +81,5 @@ eval_gemfile "Gemfile.jumpstart"
 gem "redcarpet", "~> 3.6"
 
 gem "rouge", "~> 4.5"
+
+gem "sidekiq", "~> 8.0"

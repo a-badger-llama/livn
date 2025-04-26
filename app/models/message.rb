@@ -22,7 +22,7 @@ class Message < ApplicationRecord
   }
 
   enum :model, {
-    gpt_3_5_turbo: "gpt-3.5-turbo"
+    "gpt-3.5-turbo" => "gpt-3.5-turbo"
   }
 
   enum :type, {
