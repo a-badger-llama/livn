@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyText
+  due_at: 2025-04-26 17:12:57
+  user: one
+  taskable: one
+  taskable_type: Taskable
+
+two:
+  title: MyString
+  description: MyText
+  due_at: 2025-04-26 17:12:57
+  user: two
+  taskable: two
+  taskable_type: Taskable

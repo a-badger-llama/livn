@@ -3,8 +3,9 @@
     <%= nav_link_to "New Chat", new_chat_path, class: "px-4 nav-link dark:text-gray-300 rounded-lg hover:bg-neutral-800" %>
   </div>
 
-  <div class="flex px-4 my-4">
+  <div class="flex flex-col px-4 my-4">
     <%= nav_link_to "Dashboard", root_path, class: "flex-grow nav-link dark:text-gray-300 rounded-lg hover:bg-neutral-800" %>
+    <%= nav_link_to "Tasks", tasks_path, class: "flex-grow nav-link dark:text-gray-300 rounded-lg hover:bg-neutral-800" %>
   </div>
 
   <h2 class="text-gray-400 text-base px-4">Chats</h2>

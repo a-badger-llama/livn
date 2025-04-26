@@ -1,0 +1,25 @@
+<div id="<%= dom_id task %>">
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Title</p>
+    <%= task.title %>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Description</p>
+    <%= task.description %>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Due at</p>
+    <%= task.due_at %>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">User</p>
+    <%= task.user_id %>
+  </div>
+  <div class="mb-4">
+    <p class="text-sm font-medium text-gray-500">Taskable</p>
+    <%= task.taskable_id %>
+  </div>
+  <% if action_name != "show" %>
+    <%= link_to "View this task", task, class: "btn btn-secondary" %>
+  <% end %>
+</div>

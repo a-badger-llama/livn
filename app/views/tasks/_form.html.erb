@@ -1,0 +1,28 @@
+<%= form_with(model: task) do |form| %>
+  <%= render "error_messages", resource: form.object %>
+
+  <div class="form-group">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description %>
+    <%= form.textarea :description, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :due_at %>
+    <%= form.datetime_field :due_at, class: "form-control" %>
+  </div>
+
+  <div>
+    <%= form.button button_text(form.send(:submit_default_value)), class: "btn btn-primary" %>
+
+    <% if form.object.new_record? %>
+      <%= link_to t("cancel"), tasks_path, class: "btn btn-secondary" %>
+    <% else %>
+      <%= link_to t("cancel"), task_path(@task), class: "btn btn-secondary" %>
+    <% end %>
+  </div>
+<% end %>
