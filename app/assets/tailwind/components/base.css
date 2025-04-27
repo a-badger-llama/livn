@@ -4,7 +4,7 @@ body {
   min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-weight: 400;
+  font-weight: 200;
   line-height: 1.5;
 }
 
@@ -19,11 +19,11 @@ main {
 }
 
 a {
-  color: var(--text-primary);
+  /*color: var(--text-primary);*/
 
   &:hover,
   &:focus {
-    color: var(--text-primary-hover);
+    /*color: var(--text-primary-hover);*/
     transform: none;
   }
 }
