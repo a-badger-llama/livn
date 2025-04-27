@@ -76,6 +76,6 @@ class TasksController < ApplicationController
       permitted[:due_at] = Time.zone.parse("#{date} #{time}")
     end
 
-    permitted
+    permitted.except(:due_date, :due_time)
   end
 end
