@@ -48,7 +48,7 @@
           <%= render "error_messages", resource: form.object %>
 
           <%= form.text_field :title, class: "bg-transparent border-none ring-0 placeholder-white p-0", placeholder: "Title" %>
-          <%= form.textarea :description, class: "bg-transparent border-none ring-0 placeholder-white p-0 resize-none h-6", placeholder: "Description" %>
+          <%= form.textarea :description, class: "bg-transparent border-none ring-0 placeholder-white p-0 resize-none h-6", placeholder: "Description", rows: 1 %>
 
           <div class="flex">
             <%= form.date_field :due_date, class: "bg-transparent border-none ring-0 placeholder-white p-0" %>

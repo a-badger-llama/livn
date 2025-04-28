@@ -46,6 +46,8 @@
 @import "./components/braintree.css" layer(components);
 @import "./components/typography.css" layer(utilities);
 
-/* my stylesheets */
-@import "./components/section_header.css" layer(components);
-@import "./components/sidebar.css" layer(components);
+@layer components {
+  a.active {
+    @apply bg-base-bg-hover text-text-primary;
+  }
+}
