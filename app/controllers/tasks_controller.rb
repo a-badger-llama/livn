@@ -67,15 +67,6 @@ class TasksController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def task_params
-    permitted = params.expect(task: [ :title, :description, :due_date, :due_time ])
-
-    if permitted[:due_date].present?
-      date = permitted.delete(:due_date)
-      time = permitted.delete(:due_time).presence || "00:00"
-
-      permitted[:due_at] = Time.zone.parse("#{date} #{time}")
-    end
-
-    permitted.except(:due_date, :due_time)
+    params.expect(task: [ :title, :description, :due_date, :due_time, :completed ])
   end
 end
