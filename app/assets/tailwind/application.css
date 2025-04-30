@@ -45,9 +45,3 @@
 @import "./components/wells.css" layer(components);
 @import "./components/braintree.css" layer(components);
 @import "./components/typography.css" layer(utilities);
-
-@layer components {
-  a.active {
-    @apply bg-base-bg-hover text-text-primary;
-  }
-}
