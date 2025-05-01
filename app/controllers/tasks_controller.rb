@@ -3,7 +3,8 @@ class TasksController < ApplicationController
 
   # GET /tasks
   def index
-    @pagy, @tasks = pagy(Task.sort_by_params(params[:sort], sort_direction))
+    @pagy, @tasks = pagy(Task.open.sort_by_params(params[:sort], sort_direction))
+    @pagy, @completed_tasks = pagy(Task.completed.sort_by_params(params[:sort], sort_direction))
   end
 
   # GET /tasks/1 or /tasks/1.json
@@ -13,6 +14,9 @@ class TasksController < ApplicationController
   # GET /tasks/new
   def new
     @task = Task.new
+
+    respond_to do |format|
+    end
   end
 
   # GET /tasks/1/edit
@@ -25,11 +29,9 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
-        format.html { redirect_to @task, notice: "Task was successfully created." }
-        format.json { render :show, status: :created, location: @task }
+        format.json { head :no_content }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
+        format.json @task.errors, status: :unprocessable_entity
       end
     end
   end
@@ -38,11 +40,11 @@ class TasksController < ApplicationController
   def update
     respond_to do |format|
       if @task.update(task_params)
-        format.html { redirect_to @task, notice: "Task was successfully updated." }
-        format.json { render :show, status: :ok, location: @task }
+        @completed_tasks_size = Task.completed.sort_by_params(params[:sort], sort_direction).size
+        format.turbo_stream
+        format.json { head :no_content }
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
+        format.json @task.errors, status: :unprocessable_entity
       end
     end
   end

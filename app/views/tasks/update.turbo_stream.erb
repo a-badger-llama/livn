@@ -1,0 +1,9 @@
+<% if @task.saved_change_to_completed_at? %>
+  <%= turbo_stream.remove dom_id(@task) %>
+  <%= turbo_stream.prepend(
+        @task.completed? ? "completed-tasks" : "tasks",
+        partial: "tasks/task",
+        locals: { task: @task }
+      ) %>
+  <%= turbo_stream.replace "completed-count", "<span id=\"completed-count\">#{@completed_tasks_size}</span>" %>
+<% end %>

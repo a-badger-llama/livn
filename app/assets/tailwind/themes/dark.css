@@ -5,10 +5,10 @@
 
   /*Primary*/
   --bg-primary: var(--color-blue-700);
-  --bg-primary-hover: var(--color-blue-600);
+  --bg-primary-hover: var(--bg-primary);
   --text-on-primary: var(--color-white);
-  --border-primary: var(--color-blue-500);
-  --border-primary-hover: var(--color-blue-400);
+  --border-primary: var(--bg-primary);
+  --border-primary-hover: var(--bg-primary);
   --text-primary: var(--color-blue-300);
   --text-primary-hover: var(--color-blue-400);
   --logo-primary: var(--color-gray-100);

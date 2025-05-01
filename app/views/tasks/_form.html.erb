@@ -1,29 +1,13 @@
-<%= form_with(model: task) do |form| %>
-  <%= render "error_messages", resource: form.object %>
+<%= form_with(model: task, class: "flex flex-grow", data: { controller: "task", action: "focusin->task#display focusout->task#hide" }) do |form| %>
+  <%= form.check_box :completed, data: { task_target: "completed" } %>
 
-  <div class="form-group">
-    <%= form.label :title %>
-    <%= form.text_field :title, class: "form-control" %>
+  <div class="flex flex-grow flex-col">
+    <%= form.text_field :title, class: "bg-transparent border-none ring-0 placeholder-white p-0", placeholder: "Title", data: { task_target: "title", action: "input->task#autoSave" } %>
+    <%= form.text_area :description, class: class_names("bg-transparent border-none ring-0 placeholder-white p-0 resize-none h-6", hidden: !task.description?), rows: 1, placeholder: "Description", data: { task_target: "description display", action: "input->task#autoSave" } %>
   </div>
 
-  <div class="form-group">
-    <%= form.label :description %>
-    <%= form.textarea :description, class: "form-control" %>
-  </div>
-
-  <div class="form-group">
-    <%= form.label :due_at %>
-    <%= form.date_field :due_date, class: "form-control" %>
-    <%= form.time_field :due_time, class: "form-control" %>
-  </div>
-
-  <div>
-    <%= form.button button_text(form.send(:submit_default_value)), class: "btn btn-primary" %>
-
-    <% if form.object.new_record? %>
-      <%= link_to t("cancel"), tasks_path, class: "btn btn-secondary" %>
-    <% else %>
-      <%= link_to t("cancel"), task_path(@task), class: "btn btn-secondary" %>
-    <% end %>
+  <div class="flex">
+    <%= form.date_field :due_date, class: class_names("bg-transparent border-none ring-0 placeholder-white p-0", hidden: !task.due_date), data: { task_target: "dueDate display", action: "input->task#autoSave" } %>
+    <%= form.time_field :due_time, class: class_names("bg-transparent border-none ring-0 placeholder-white p-0", hidden: !task.due_time), data: { task_target: "dueTime display", action: "input->task#autoSave" } %>
   </div>
 <% end %>

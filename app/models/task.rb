@@ -4,6 +4,9 @@ class Task < ApplicationRecord
 
   before_validation :combine_due_date_and_time
 
+  scope :open, -> { where(completed_at: nil) }
+  scope :completed, -> { where.not(completed_at: nil) }
+
   def completed
     completed_at.present?
   end
@@ -14,6 +17,14 @@ class Task < ApplicationRecord
     else
       self.completed_at = nil
     end
+  end
+
+  def completed?
+    completed_at.present?
+  end
+
+  def complete!
+    update(completed_at: Time.current)
   end
 
   def due_date

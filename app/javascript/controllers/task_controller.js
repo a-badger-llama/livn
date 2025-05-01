@@ -1,5 +1,6 @@
 import {Controller} from "@hotwired/stimulus";
 import debounce from "debounce";
+import { Turbo } from "@hotwired/turbo-rails";
 
 export default class extends Controller {
   static values = { id: Number };
@@ -27,13 +28,39 @@ export default class extends Controller {
   }
 
   submitForm() {
-    const form = this.element
+    const formElement = this.element;
 
-    console.log("Submitting form", form.action, form.method, new FormData(form))
-    // fetch(form.action, {
-    //   method: form.method,
-    //   headers: { "Accept": "text/vnd.turbo-stream.html" },
-    //   body: new FormData(form)
-    // })
+    const CSRF_TOKEN_SELECTOR = "[name='csrf-token']";
+    const TURBO_STREAM_HEADER = "text/vnd.turbo-stream.html";
+
+    const csrfToken = document.querySelector(CSRF_TOKEN_SELECTOR)?.content || "";
+
+    const fetchOptions = {
+      method: formElement.method,
+      headers: {
+        "Accept": TURBO_STREAM_HEADER,
+        "X-CSRF-Token": csrfToken,
+      },
+      body: new FormData(formElement),
+    };
+
+    const handleResponse = async (response) => {
+      const contentType = response.headers.get("Content-Type") || "";
+
+      if (response.ok && contentType.includes("turbo-stream")) {
+        const turboStreamHTML = await response.text();
+        Turbo.renderStreamMessage(turboStreamHTML);
+      } else {
+        console.warn("Received a non-turbo-stream response");
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+    };
+
+    fetch(formElement.action, fetchOptions)
+    .then(handleResponse)
+    .catch((error) => console.error("Autosave failed:", error));
   }
 }

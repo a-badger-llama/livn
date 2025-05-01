@@ -1,48 +1,56 @@
-<%= turbo_stream_from :tasks %>
-
 <%= content_for :header do %>
   <div>Tasks</div>
 <% end %>
 
 <div class="container mx-auto my-8 max-w-2xl pb-2 bg-gray-900 rounded-2xl border border-gray-900">
-  <div class="flex items-center justify-between px-4 py-2">
-    <h1 class="h3">Task List</h1>
+  <div class="flex flex-col justify-center px-4 py-2">
+    <div class="flex items-center justify-between">
+      <h1 class="h3">Task List</h1>
 
-    <div class="relative" data-controller="dropdown">
+      <div class="relative" data-controller="dropdown">
         <span class="px-4 py-2 cursor-pointer rounded-lg hover:bg-neutral-800" data-action="click->dropdown#toggle click@window->dropdown#hide">
           &#x22EE; <!-- Three vertical dots -->
         </span>
 
-      <div class="hidden flex flex-col absolute right-0 z-10 rounded-lg py-2 bg-gray-700 border border-gray-700"
-           data-dropdown-target="menu"
-           data-transition-enter="transition ease-out duration-200"
-           data-transition-enter-from="opacity-0 translate-y-1"
-           data-transition-enter-to="opacity-100 translate-y-0"
-           data-transition-leave="transition ease-in duration-150"
-           data-transition-leave-from="opacity-100 translate-y-0"
-           data-transition-leave-to="opacity-0 translate-y-1">
-        <span class="px-4 py-2">Sort by</span>
-        <%= sortable @tasks, :title, "Title", class: "px-8 py-2 text-white hover:bg-neutral-800" %>
-        <%= sortable @tasks, :description, "Description", class: "px-8 py-2 text-white hover:bg-neutral-800" %>
-        <%= sortable @tasks, :due_at, "Due at", class: "px-8 py-2 text-white hover:bg-neutral-800" %>
-        <%= sortable @tasks, :created_at, "Created at", class: "px-8 py-2 text-white hover:bg-neutral-800" %>
+        <div class="hidden flex flex-col absolute right-0 z-10 rounded-lg py-2 bg-gray-700 border border-gray-700"
+             data-dropdown-target="menu"
+             data-transition-enter="transition ease-out duration-200"
+             data-transition-enter-from="opacity-0 translate-y-1"
+             data-transition-enter-to="opacity-100 translate-y-0"
+             data-transition-leave="transition ease-in duration-150"
+             data-transition-leave-from="opacity-100 translate-y-0"
+             data-transition-leave-to="opacity-0 translate-y-1">
+          <span class="px-4 py-2">Sort by</span>
+          <%= sortable @tasks, :title, "Title", class: "px-8 py-2 text-white hover:bg-neutral-800" %>
+          <%= sortable @tasks, :description, "Description", class: "px-8 py-2 text-white hover:bg-neutral-800" %>
+          <%= sortable @tasks, :due_at, "Due at", class: "px-8 py-2 text-white hover:bg-neutral-800" %>
+          <%= sortable @tasks, :created_at, "Created at", class: "px-8 py-2 text-white hover:bg-neutral-800" %>
+        </div>
       </div>
     </div>
+
+    <%= tag.div class: "cursor-pointer flex mx-4 px-4 py-2 rounded-2xl hover:bg-neutral-800 text-primary" do %>
+      New Task
+    <% end %>
   </div>
 
-  <div class="flex flex-col">
+  <div id="tasks" class="flex flex-col">
     <% @tasks.each do |task| %>
-      <%= form_with(model: task, data: { controller: "task", "task-id-value" => task.id, action: "focusin->task#display focusout->task#hide" }) do |form| %>
-        <div class="flex flex-col px-4 py-2 hover:bg-neutral-800">
-          <%= form.text_field :title, class: "bg-transparent border-none ring-0 placeholder-white p-0", placeholder: "Title", data: { task_target: "title", action: "input->task#autoSave" } %>
-          <%= form.text_area :description, class: class_names("bg-transparent border-none ring-0 placeholder-white p-0 resize-none h-6", hidden: !task.description?), rows: 1, placeholder: "Description", data: { task_target: "description display", action: "input->task#autoSave" } %>
-
-          <div class="flex">
-            <%= form.date_field :due_date, class: class_names("bg-transparent border-none ring-0 placeholder-white p-0", hidden: !task.due_date), data: { task_target: "dueDate display", action: "input->task#autoSave" } %>
-            <%= form.time_field :due_time, class: class_names("bg-transparent border-none ring-0 placeholder-white p-0", hidden: !task.due_time), data: { task_target: "dueTime display", action: "input->task#autoSave" } %>
-          </div>
-        </div>
-      <% end %>
+      <%= render task %>
     <% end %>
+  </div>
+
+  <div class="flex flex-col" data-controller="toggle">
+    <div class="flex items-center p-1 gap-1 cursor-pointer" data-toggle-target="button" data-action="click->toggle#toggle">
+      <span class="m-2 text-xs" data-toggle-target="toggleClass" data-toggle-class="hidden">&#9654;</span> <!-- Right-facing caret -->
+      <span class="m-2 text-xs hidden" data-toggle-target="toggleClass" data-toggle-class="hidden">&#9660;</span> <!-- Downward-facing caret -->
+      Completed (<span id="completed-count"><%= @completed_tasks.size %></span>)
+    </div>
+
+    <div id="completed-tasks" class="hidden" data-toggle-target="toggleable">
+      <% @completed_tasks.each do |task| %>
+        <%= render task %>
+      <% end %>
+    </div>
   </div>
 </div>
