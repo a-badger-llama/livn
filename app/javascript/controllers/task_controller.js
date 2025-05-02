@@ -1,66 +1,155 @@
 import {Controller} from "@hotwired/stimulus";
-import debounce from "debounce";
-import { Turbo } from "@hotwired/turbo-rails";
+import debounce     from "debounce";
+import {Turbo}      from "@hotwired/turbo-rails";
+
+const COMPLETED_TASKS_SELECTOR = "#completed-tasks";
+const TASK_LIST_SELECTOR = "#tasks";
+const CSRF_TOKEN_SELECTOR = "[name='csrf-token']";
 
 export default class extends Controller {
-  static values = { id: Number };
-  static targets = [
-    "display",
-    "form",
-    "title",
-    "titleInput",
-  ];
+  static values = {id: Number};
+  static targets = ["attribute", "complete", "domId", "display", "form", "title"];
 
   connect() {
+    this.initializeDebouncedMethods();
+    this.pendingStream = null;
+  }
+
+  initializeDebouncedMethods() {
     this.submitForm = debounce(this.submitForm.bind(this), 500);
+    this.deleteTask = debounce(this.deleteTask.bind(this), 500);
   }
 
-  autoSave() {
-    this.submitForm()
+  autoSave(event) {
+    this.submitForm();
   }
 
-  display() {
+  toggleCompletion() {
+    const isComplete = this.completeTarget.checked;
+    this.moveTask(this.element, isComplete ? COMPLETED_TASKS_SELECTOR : TASK_LIST_SELECTOR);
+    this.submitForm();
+  }
+
+  showInputs() {
     this.displayTargets.forEach(input => input.classList.remove("hidden"));
   }
 
-  hide() {
-    this.displayTargets.forEach(input => input.value === "" ? input.classList.add("hidden") : null);
+  handleKeydown(event) {
+    if (event.key === "Enter") this.handleEnterKey(event);
+    if (event.key === "Backspace") this.handleDeleteKey(event);
+  }
+
+  handleDeleteKey(event) {
+    if (this.titleTarget.value === "") {
+      event.preventDefault();
+      this.deleteTask();
+    }
+  }
+
+  handleEnterKey(event) {
+    event.preventDefault();
+
+    if (this.isEmpty() && this.isNew()) return;
+
+    this.submitForm();
+    this.insertTask();
+  }
+
+  hideInputs() {
+    this.displayTargets.forEach(input =>
+                                  input.value === "" ? input.classList.add("hidden") : null
+    );
+  }
+
+  insertTask() {
+    const taskTemplate = document.querySelector("[id='task-template']");
+    const clone = taskTemplate.content.cloneNode(true);
+    const newTask = clone.firstElementChild;
+    const titleInput = newTask.querySelector("#title_task");
+    newTask.id = `${newTask.id}_${Date.now()}`;
+    this.element.insertAdjacentElement("afterend", newTask);
+    titleInput.focus();
+  }
+
+  async handleFetchResponse(response) {
+    const contentType = response.headers.get("Content-Type") || "";
+    if (response.ok && contentType.includes("turbo-stream")) {
+      this.pendingStream = await response.text();
+      this.renderSafely();
+    } else {
+      console.warn("Received a non-turbo-stream response");
+    }
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  generateHeaders(contentType = "text/vnd.turbo-stream.html") {
+    const csrfToken = document.querySelector(CSRF_TOKEN_SELECTOR)?.content || "";
+    return {"X-CSRF-Token": csrfToken, Accept: contentType};
+  }
+
+  deleteTask() {
+    this.element.remove();
+    if (!this.isNew()) {
+      fetch(this.formTarget.action, {
+        method:  "DELETE",
+        headers: this.generateHeaders(),
+      })
+      .then(this.handleFetchResponse.bind(this))
+      .catch(error => console.error("Task deletion failed:", error));
+    }
   }
 
   submitForm() {
-    const formElement = this.element;
+    if (this.isEmpty()) return;
 
-    const CSRF_TOKEN_SELECTOR = "[name='csrf-token']";
-    const TURBO_STREAM_HEADER = "text/vnd.turbo-stream.html";
+    const formElement = this.formTarget;
+    const formData = new FormData(formElement);
+    formData.append("dom_id", this.element.id);
+    fetch(formElement.action, {
+      method:  formElement.method,
+      headers: this.generateHeaders(),
+      body:    formData,
+    })
+    .then(this.handleFetchResponse.bind(this))
+    .catch(error => console.error("Form submission failed:", error));
+  }
 
-    const csrfToken = document.querySelector(CSRF_TOKEN_SELECTOR)?.content || "";
+  renderSafely() {
+    if (this.pendingStream && !this.hasActiveFocus()) {
+      Turbo.renderStreamMessage(this.pendingStream);
+      this.pendingStream = null;
+    }
+  }
 
-    const fetchOptions = {
-      method: formElement.method,
-      headers: {
-        "Accept": TURBO_STREAM_HEADER,
-        "X-CSRF-Token": csrfToken,
-      },
-      body: new FormData(formElement),
-    };
+  hasActiveFocus() {
+    return this.element.contains(document.activeElement);
+  }
 
-    const handleResponse = async (response) => {
-      const contentType = response.headers.get("Content-Type") || "";
+  shouldRemove() {
+    console.log(this.isEmpty(), this.isNew(), !this.hasActiveFocus());
+    return this.isEmpty() && this.isNew() && !this.hasActiveFocus();
+  }
 
-      if (response.ok && contentType.includes("turbo-stream")) {
-        const turboStreamHTML = await response.text();
-        Turbo.renderStreamMessage(turboStreamHTML);
-      } else {
-        console.warn("Received a non-turbo-stream response");
-      }
+  isEmpty() {
+    return this.attributeTargets.every(input => input.value === "" || input.value === null);
+  }
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-    };
+  isNew() {
+    return this.element.id.includes("new")
+  }
 
-    fetch(formElement.action, fetchOptions)
-    .then(handleResponse)
-    .catch((error) => console.error("Autosave failed:", error));
+  moveTask(taskElement, targetSelector) {
+    const targetContainer = document.querySelector(targetSelector);
+    taskElement.remove();
+    targetContainer.prepend(taskElement.cloneNode(true));
+  }
+
+  focusOut() {
+    if (this.shouldRemove()) {
+      this.deleteTask();
+    } else {
+      this.hideInputs();
+      this.renderSafely();
+    }
   }
 }

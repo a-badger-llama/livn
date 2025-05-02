@@ -3,12 +3,15 @@ class TasksController < ApplicationController
 
   # GET /tasks
   def index
-    @pagy, @tasks = pagy(Task.open.sort_by_params(params[:sort], sort_direction))
-    @pagy, @completed_tasks = pagy(Task.completed.sort_by_params(params[:sort], sort_direction))
+    @tasks = Task.open.order(created_at: :desc).sort_by_params(params[:sort], sort_direction)
+    @completed_tasks = Task.completed.sort_by_params(params[:sort], sort_direction)
   end
 
   # GET /tasks/1 or /tasks/1.json
   def show
+    respond_to do |format|
+      format.turbo_stream
+    end
   end
 
   # GET /tasks/new
@@ -29,6 +32,9 @@ class TasksController < ApplicationController
 
     respond_to do |format|
       if @task.save
+        @dom_id = params[:dom_id]
+
+        format.turbo_stream
         format.json { head :no_content }
       else
         format.json @task.errors, status: :unprocessable_entity
@@ -53,7 +59,7 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy!
     respond_to do |format|
-      format.html { redirect_to tasks_path, status: :see_other, notice: "Task was successfully destroyed." }
+      format.turbo_stream
       format.json { head :no_content }
     end
   end

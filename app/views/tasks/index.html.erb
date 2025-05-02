@@ -2,8 +2,8 @@
   <div>Tasks</div>
 <% end %>
 
-<div class="container mx-auto my-8 max-w-2xl pb-2 bg-gray-900 rounded-2xl border border-gray-900">
-  <div class="flex flex-col justify-center px-4 py-2">
+<div class="container mx-auto my-8 max-w-2xl py-2 bg-gray-900 rounded-2xl border border-gray-900 text-sm">
+  <div class="flex flex-col justify-center px-4">
     <div class="flex items-center justify-between">
       <h1 class="h3">Task List</h1>
 
@@ -28,13 +28,15 @@
         </div>
       </div>
     </div>
-
-    <%= tag.div class: "cursor-pointer flex mx-4 px-4 py-2 rounded-2xl hover:bg-neutral-800 text-primary" do %>
-      New Task
-    <% end %>
   </div>
 
   <div id="tasks" class="flex flex-col">
+    <template id="task-template"><%= render Task.new %></template>
+
+    <%= tag.div class: "flex", data: { controller: "task" } do %>
+      <span class="cursor-pointer w-full px-2 py-1 rounded-2xl hover:bg-neutral-800 text-primary mx-4" data-action="click->task#insertTask">New Task</span>
+    <% end %>
+
     <% @tasks.each do |task| %>
       <%= render task %>
     <% end %>

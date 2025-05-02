@@ -1,13 +1,15 @@
-<%= form_with(model: task, class: "flex flex-grow", data: { controller: "task", action: "focusin->task#display focusout->task#hide" }) do |form| %>
-  <%= form.check_box :completed, data: { task_target: "completed" } %>
+<%= form_with(model: task, class: "flex flex-grow p-1", data: { task_target: "form", action: "focusout->task#autoSave" }) do |form| %>
+  <%= hidden_field_tag :dom_id, dom_id(task), data: { task_target: "domId" } %>
 
-  <div class="flex flex-grow flex-col">
-    <%= form.text_field :title, class: "bg-transparent border-none ring-0 placeholder-white p-0", placeholder: "Title", data: { task_target: "title", action: "input->task#autoSave" } %>
-    <%= form.text_area :description, class: class_names("bg-transparent border-none ring-0 placeholder-white p-0 resize-none h-6", hidden: !task.description?), rows: 1, placeholder: "Description", data: { task_target: "description display", action: "input->task#autoSave" } %>
-  </div>
+  <%= form.check_box :completed, id: dom_id(task, :completed), class: "mx-4 my-1 rounded-full bg-transparent border-1", data: { task_target: "complete", action: "input->task#toggleCompletion" }, autocomplete: "off" %>
 
-  <div class="flex">
-    <%= form.date_field :due_date, class: class_names("bg-transparent border-none ring-0 placeholder-white p-0", hidden: !task.due_date), data: { task_target: "dueDate display", action: "input->task#autoSave" } %>
-    <%= form.time_field :due_time, class: class_names("bg-transparent border-none ring-0 placeholder-white p-0", hidden: !task.due_time), data: { task_target: "dueTime display", action: "input->task#autoSave" } %>
+  <div class="flex flex-grow flex-col" data-action="focusin->task#showInputs focusout->task#hideInputs">
+    <%= form.text_field :title, id: dom_id(task, :title), class: "text-sm bg-transparent border-none ring-0 p-0", placeholder: "Title", data: { task_target: "attribute title", action: "keydown->task#handleKeydown" }, autocomplete: "off" %>
+    <%= form.text_area :description, id: dom_id(task, :description), class: class_names("text-xs bg-transparent border-none ring-0 p-0 resize-none h-6", hidden: task.persisted? && !task.description?), rows: 1, placeholder: "Description", data: { task_target: "attribute display", action: "focusout->task#autoSave" } %>
+
+    <div class="flex">
+      <%= form.date_field :due_date, id: dom_id(task, :due_date), class: class_names("bg-transparent border-none ring-0 p-0", hidden: task.persisted? && !task.due_date), data: { task_target: "attribute display", action: "input->task#autoSave" } %>
+      <%= form.time_field :due_time, id: dom_id(task, :due_time), class: class_names("bg-transparent border-none ring-0 p-0", hidden: task.persisted? && !task.due_time), data: { task_target: "attribute display", action: "input->task#autoSave" } %>
+    </div>
   </div>
 <% end %>
