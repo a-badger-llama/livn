@@ -10,18 +10,22 @@ export default class extends Controller {
       animation: 150,
       onEnd: this.updatePositions.bind(this),
     })
+    document.addEventListener("turbo:before-stream-render", this.updatePositions.bind(this))
   }
 
   updatePositions(event) {
-    const ids = this.taskTargets.map((task) => task.dataset.id)
+    requestAnimationFrame(() => {
+      const ids = Array.from(this.element.querySelectorAll("[data-task-list-target='task']")).map((task) => task.dataset.id)
 
-    fetch("/tasks/reorder", {
-      method: "POST",
-      headers: {
-        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ ids }),
+      console.log(ids)
+      fetch("/tasks/reorder", {
+        method: "POST",
+        headers: {
+          "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids }),
+      })
     })
   }
 }

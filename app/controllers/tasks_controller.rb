@@ -46,7 +46,7 @@ class TasksController < ApplicationController
   def update
     respond_to do |format|
       if @task.update(task_params)
-        @completed_tasks_size = Task.completed.sort_by_params(params[:sort], sort_direction).size
+        @completed_tasks_size = Task.complete.sort_by_params(params[:sort], sort_direction).size
         format.turbo_stream
         format.json { head :no_content }
       else

@@ -2,8 +2,6 @@ import {Controller} from "@hotwired/stimulus";
 import {Turbo}      from "@hotwired/turbo-rails";
 import debounce     from "debounce";
 
-const COMPLETED_TASKS_SELECTOR = "#completed-tasks";
-const TASK_LIST_SELECTOR = "#tasks";
 const CSRF_TOKEN_SELECTOR = "[name='csrf-token']";
 
 export default class extends Controller {
@@ -16,63 +14,78 @@ export default class extends Controller {
   }
 
   initializeDebouncedMethods() {
+    this.hideInputs = debounce(this.hideInputs.bind(this), 200);
     this.submitForm = debounce(this.submitForm.bind(this), 500);
     this.deleteTask = debounce(this.deleteTask.bind(this), 500);
   }
 
-  autoSave(event) {
+  autoSave() {
     this.submitForm();
   }
 
   toggleCompletion() {
-    const isComplete = this.completeTarget.checked;
-    this.moveTask(this.element, isComplete ? COMPLETED_TASKS_SELECTOR : TASK_LIST_SELECTOR);
+    this.hideSelf();
     this.submitForm();
   }
 
   showInputs() {
-    console.log("show inputs")
     this.displayTargets.forEach(input => input.classList.remove("hidden"));
   }
 
   handleKeydown(event) {
-    if (event.key === "Enter") this.handleEnterKey(event);
-    if (event.key === "Backspace") this.handleDeleteKey(event);
+    if (event.key === "Enter") this._submitAndInsertNew(event);
+    if (event.key === "Backspace") this._deleteAndRefocus(event);
   }
 
-  handleDeleteKey(event) {
+  _deleteAndRefocus(event) {
     if (this.titleTarget.value === "") {
       event.preventDefault();
       this.deleteTask();
     }
   }
 
-  handleEnterKey(event) {
+  _submitAndInsertNew(event) {
     event.preventDefault();
 
-    if (this.isEmpty() && this.isNew()) return;
+    if (this._isEmpty() && this._isNew()) return;
 
     this.submitForm();
     this.insertTask();
   }
 
   hideInputs() {
-    this.displayTargets.forEach(input =>
-                                  input.value === "" ? input.classList.add("hidden") : null
-    );
+    if (this._hasActiveFocus()) return;
+
+    this.displayTargets.forEach(input => input.value === "" ? input.classList.add("hidden") : null);
   }
 
-  insertTask() {
+  hideSelf() {
+    this.element.classList.add("hidden");
+  }
+
+  _createNewTask() {
     const taskTemplate = document.querySelector("[id='task-template']");
     const clone = taskTemplate.content.cloneNode(true);
     const newTask = clone.firstElementChild;
-    const titleInput = newTask.querySelector("#title_task");
     newTask.id = `${newTask.id}_${Date.now()}`;
+    return newTask;
+  }
+
+  prependTask() {
+    const newTask = this._createNewTask();
+    const titleInput = newTask.querySelector("#title_task");
+    document.querySelector("#tasks").prepend(newTask);
+    titleInput.focus();
+  }
+
+  insertTask() {
+    const newTask = this._createNewTask();
+    const titleInput = newTask.querySelector("#title_task");
     this.element.insertAdjacentElement("afterend", newTask);
     titleInput.focus();
   }
 
-  async handleFetchResponse(response) {
+  async _handleResponse(response) {
     const contentType = response.headers.get("Content-Type") || "";
     if (response.ok && contentType.includes("turbo-stream")) {
       this.pendingStream = await response.text();
@@ -83,70 +96,65 @@ export default class extends Controller {
     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
   }
 
-  generateHeaders(contentType = "text/vnd.turbo-stream.html") {
+  _generateHeaders(contentType = "text/vnd.turbo-stream.html") {
     const csrfToken = document.querySelector(CSRF_TOKEN_SELECTOR)?.content || "";
     return {"X-CSRF-Token": csrfToken, Accept: contentType};
   }
 
   deleteTask() {
-    this.element.remove();
-    if (!this.isNew()) {
-      fetch(this.formTarget.action, {
-        method:  "DELETE",
-        headers: this.generateHeaders(),
-      })
-      .then(this.handleFetchResponse.bind(this))
-      .catch(error => console.error("Task deletion failed:", error));
-    }
+    this.hideSelf();
+
+    if (this._isNew()) return;
+
+    fetch(this.formTarget.action, {
+      method:  "DELETE",
+      headers: this._generateHeaders(),
+    })
+    .then(this._handleResponse.bind(this))
+    .catch(error => console.error("Task deletion failed:", error));
   }
 
   submitForm() {
-    if (this.isEmpty()) return;
+    if (this._isEmpty()) return;
 
     const formElement = this.formTarget;
     const formData = new FormData(formElement);
     formData.append("dom_id", this.element.id);
     fetch(formElement.action, {
       method:  formElement.method,
-      headers: this.generateHeaders(),
+      headers: this._generateHeaders(),
       body:    formData,
     })
-    .then(this.handleFetchResponse.bind(this))
+    .then(this._handleResponse.bind(this))
     .catch(error => console.error("Form submission failed:", error));
   }
 
   renderSafely() {
-    if (this.pendingStream && !this.hasActiveFocus()) {
+    if (this.pendingStream && !this._hasActiveFocus()) {
       Turbo.renderStreamMessage(this.pendingStream);
       this.pendingStream = null;
     }
   }
 
-  hasActiveFocus() {
+  _hasActiveFocus() {
     return this.element.contains(document.activeElement);
   }
 
-  shouldRemove() {
-    return this.isEmpty() && this.isNew() && !this.hasActiveFocus();
+  _shouldRemove() {
+    return this._isEmpty() && this._isNew() && !this._hasActiveFocus();
   }
 
-  isEmpty() {
+  _isEmpty() {
     return this.attributeTargets.every(input => input.value === "" || input.value === null);
   }
 
-  isNew() {
+  _isNew() {
     return this.element.id.includes("new")
   }
 
-  moveTask(taskElement, targetSelector) {
-    const targetContainer = document.querySelector(targetSelector);
-    taskElement.remove();
-    targetContainer.prepend(taskElement.cloneNode(true));
-  }
-
   focusOut() {
-    if (this.shouldRemove()) {
-      this.deleteTask();
+    if (this._shouldRemove()) {
+      this.element.remove();
     } else {
       this.hideInputs();
       this.renderSafely();
