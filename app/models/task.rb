@@ -4,8 +4,10 @@ class Task < ApplicationRecord
 
   before_validation :combine_due_date_and_time
 
-  scope :open, -> { where(completed_at: nil) }
-  scope :completed, -> { where.not(completed_at: nil) }
+  scope :incomplete, -> { where(completed_at: nil) }
+  scope :complete, -> { where.not(completed_at: nil) }
+  scope :position, -> { order(position: :asc) }
+  scope :default_sort, -> { position.order(created_at: :desc) }
 
   def completed
     completed_at.present?

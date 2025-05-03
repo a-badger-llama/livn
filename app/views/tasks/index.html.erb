@@ -30,7 +30,7 @@
     </div>
   </div>
 
-  <div id="tasks" class="flex flex-col">
+  <div id="tasks" class="flex flex-col" data-controller="task-list">
     <template id="task-template"><%= render Task.new %></template>
 
     <%= tag.div class: "flex", data: { controller: "task" } do %>

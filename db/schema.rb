@@ -341,6 +341,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_26_231257) do
     t.datetime "due_at"
     t.boolean "has_due_time", default: false
     t.datetime "completed_at"
+    t.integer "position", default: 0
     t.bigint "user_id", null: false
     t.string "taskable_type"
     t.bigint "taskable_id"

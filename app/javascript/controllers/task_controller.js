@@ -1,6 +1,6 @@
 import {Controller} from "@hotwired/stimulus";
-import debounce     from "debounce";
 import {Turbo}      from "@hotwired/turbo-rails";
+import debounce     from "debounce";
 
 const COMPLETED_TASKS_SELECTOR = "#completed-tasks";
 const TASK_LIST_SELECTOR = "#tasks";
@@ -31,6 +31,7 @@ export default class extends Controller {
   }
 
   showInputs() {
+    console.log("show inputs")
     this.displayTargets.forEach(input => input.classList.remove("hidden"));
   }
 
@@ -126,7 +127,6 @@ export default class extends Controller {
   }
 
   shouldRemove() {
-    console.log(this.isEmpty(), this.isNew(), !this.hasActiveFocus());
     return this.isEmpty() && this.isNew() && !this.hasActiveFocus();
   }
 

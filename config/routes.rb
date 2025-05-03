@@ -2,7 +2,11 @@ require "sidekiq/web"
 
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
-  resources :tasks
+  resources :tasks do
+    collection do
+      post "reorder"
+    end
+  end
   mount Sidekiq::Web => "/sidekiq"
 
   resources :messages

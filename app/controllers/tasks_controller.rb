@@ -3,8 +3,8 @@ class TasksController < ApplicationController
 
   # GET /tasks
   def index
-    @tasks = Task.open.order(created_at: :desc).sort_by_params(params[:sort], sort_direction)
-    @completed_tasks = Task.completed.sort_by_params(params[:sort], sort_direction)
+    @tasks = Task.incomplete.position.order(created_at: :desc).sort_by_params(params[:sort], sort_direction)
+    @completed_tasks = Task.complete.position.order(created_at: :desc).sort_by_params(params[:sort], sort_direction)
   end
 
   # GET /tasks/1 or /tasks/1.json
@@ -62,6 +62,14 @@ class TasksController < ApplicationController
       format.turbo_stream
       format.json { head :no_content }
     end
+  end
+
+  def reorder
+    params[:ids].each_with_index do |id, index|
+      Task.where(id: id).update_all(position: index)
+    end
+
+    head :ok
   end
 
   private

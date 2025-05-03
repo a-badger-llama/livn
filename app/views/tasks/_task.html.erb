@@ -1,4 +1,15 @@
-<div id="<%= dom_id(task) %>" class="flex hover:bg-neutral-800" data-controller="task" data-task-id-value="<%= task.id %>" data-action="focusout->task#focusOut">
+<div id="<%= dom_id(task) %>" class="flex hover:bg-neutral-800 p-1" data-id="<%= task.id %>" data-controller="task" data-action="focusout->task#focusOut" data-task-list-target="task">
+  <div class="flex items-center">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="drag-handle text-gray-400" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="6"  cy="7"  r="1" fill="currentColor"/>
+      <circle cx="12" cy="7"  r="1" fill="currentColor"/>
+      <circle cx="6"  cy="12" r="1" fill="currentColor"/>
+      <circle cx="12" cy="12" r="1" fill="currentColor"/>
+      <circle cx="6"  cy="17" r="1" fill="currentColor"/>
+      <circle cx="12" cy="17" r="1" fill="currentColor"/>
+    </svg>
+  </div>
+
   <%= render "form", task: task %>
 
   <% if task.persisted? %>
