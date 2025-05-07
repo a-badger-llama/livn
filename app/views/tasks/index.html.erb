@@ -32,11 +32,11 @@
     <%= tag.div class: "flex", data: { controller: "task" } do %>
       <span class="cursor-pointer w-full px-2 py-1 rounded-2xl hover:bg-neutral-800 text-primary" data-action="click->task#prependTask">New Task</span>
     <% end %>
+
+    <template id="task-template"><%= render Task.new %></template>
   </div>
 
   <div id="tasks" class="flex flex-col" data-controller="task-list">
-    <template id="task-template"><%= render Task.new %></template>
-
     <% @tasks.each do |task| %>
       <%= render task %>
     <% end %>

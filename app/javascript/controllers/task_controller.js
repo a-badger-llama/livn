@@ -11,6 +11,7 @@ export default class extends Controller {
   connect() {
     this.initializeDebouncedMethods();
     this.pendingStream = null;
+    this.element.addEventListener("keydown", this.handleKeydown.bind(this));
   }
 
   initializeDebouncedMethods() {
@@ -29,18 +30,65 @@ export default class extends Controller {
   }
 
   showInputs() {
+    console.log("show inputs")
     this.displayTargets.forEach(input => input.classList.remove("hidden"));
   }
 
   handleKeydown(event) {
-    if (event.key === "Enter") this._submitAndInsertNew(event);
-    if (event.key === "Backspace") this._deleteAndRefocus(event);
+    if (event.key === "Escape") return this.element.blur();
+    if (event.key === "ArrowUp") return this._moveUp(event);
+    if (event.key === "ArrowDown") return this._moveDown(event);
+
+    if (this._taskHasFocus()) return this._focusTitle();
+
+    if (this._titleHasFocus()) {
+      if (event.key === "Enter") return this._submitAndInsertNew(event);
+      if (event.key === "Backspace") return this._deleteAndRefocus(event);
+    }
+
+    if (document.activeElement === this.descriptionTarget) {
+      if (event.key === "Enter" && event.shiftKey) return this._submitAndInsertNew(event);
+    }
+
+    // Any key from the task opens the form, other than escape or arrow up/down
+
+    // 'Enter' from the title input submits the current form and inserts a new task
+    // from the description input, shift + enter submits the form
+
+    // 'Backspace' from the title deletes the task if the title is empty, and puts focus on the previous task
+  }
+
+  _taskHasFocus() {
+    return document.activeElement === this.element;
+  }
+
+  _focusTitle() {
+    if (this._titleHasFocus()) return;
+    console.log("focusing title")
+    this.titleTarget.focus();
+  }
+
+  _titleHasFocus() {
+    return document.activeElement === this.titleTarget;
+  }
+
+  _moveDown(event) {
+    const next = this.element.nextElementSibling;
+
+    if (next) next.focus();
+  }
+
+  _moveUp(event) {
+    const prev = this.element.previousElementSibling
+
+    if (prev) prev.focus();
   }
 
   _deleteAndRefocus(event) {
     if (this.titleTarget.value === "") {
       event.preventDefault();
       this.deleteTask();
+      this._moveUp(event);
     }
   }
 
@@ -75,14 +123,16 @@ export default class extends Controller {
     const newTask = this._createNewTask();
     const titleInput = newTask.querySelector("#title_task");
     document.querySelector("#tasks").prepend(newTask);
-    titleInput.focus();
+
+    requestAnimationFrame(() => {titleInput.focus()});
   }
 
   insertTask() {
     const newTask = this._createNewTask();
     const titleInput = newTask.querySelector("#title_task");
     this.element.insertAdjacentElement("afterend", newTask);
-    titleInput.focus();
+
+    requestAnimationFrame(() => {titleInput.focus()});
   }
 
   async _handleResponse(response) {
@@ -152,7 +202,17 @@ export default class extends Controller {
     return this.element.id.includes("new")
   }
 
+  focusIn() {
+    if (!this._hasActiveFocus()) return;
+
+    this.element.classList.add("bg-neutral-800");
+  }
+
   focusOut() {
+    if (this._hasActiveFocus()) return;
+
+    this.element.classList.remove("bg-neutral-800");
+
     if (this._shouldRemove()) {
       this.element.remove();
     } else {

@@ -9,15 +9,17 @@ export default class extends Controller {
       handle: ".drag-handle",
       animation: 150,
       onEnd: this.updatePositions.bind(this),
+      onMove: this.handleMove.bind(this),
+      // chosenClass: "opacity-100",
+      ghostClass: "opacity-0",
     })
     document.addEventListener("turbo:before-stream-render", this.updatePositions.bind(this))
   }
 
   updatePositions(event) {
     requestAnimationFrame(() => {
-      const ids = Array.from(this.element.querySelectorAll("[data-task-list-target='task']")).map((task) => task.dataset.id)
+      const ids = this.taskTargets.map((task) => task.dataset.id)
 
-      console.log(ids)
       fetch("/tasks/reorder", {
         method: "POST",
         headers: {
@@ -27,5 +29,22 @@ export default class extends Controller {
         body: JSON.stringify({ ids }),
       })
     })
+  }
+
+  handleMove(event) {
+    console.log(event)
+    // Remove existing underline
+    document.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+
+    // Create a new underline indicator
+    const dropIndicator = document.createElement("div");
+    dropIndicator.className = "drop-indicator border-b-2 border-primary";
+
+    // Insert the indicator before or after the target element based on direction
+    if (event.willInsertAfter) {
+      event.to.insertBefore(dropIndicator, event.related.nextSibling.nextElementSibling);
+    } else {
+      event.to.insertBefore(dropIndicator, event.related);
+    }
   }
 }

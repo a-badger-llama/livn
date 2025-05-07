@@ -1,15 +1,15 @@
-<%= form_with(model: task, class: "flex flex-grow", data: { task_target: "form", action: "focusout->task#autoSave" }) do |form| %>
+<%= form_with(model: task, class: "flex flex-grow focusin:bg-neutral-800", data: { task_target: "form", action: "focusout->task#autoSave" }) do |form| %>
   <%= hidden_field_tag :dom_id, dom_id(task), data: { task_target: "domId" } %>
 
   <%= form.check_box :completed, id: dom_id(task, :completed), class: "mr-2 mt-1 rounded-full bg-transparent border-1", data: { task_target: "complete", action: "input->task#toggleCompletion" }, autocomplete: "off" %>
 
   <div class="flex flex-grow flex-col justify-center" data-action="focusin->task#showInputs">
-    <%= form.text_field :title, id: dom_id(task, :title), class: "text-sm bg-transparent border-none ring-0 p-0", placeholder: "Title", data: { task_target: "attribute title", action: "keydown->task#handleKeydown" }, autocomplete: "off" %>
-    <%= form.text_area :description, id: dom_id(task, :description), class: class_names("text-xs bg-transparent border-none ring-0 p-0 resize-none h-6", hidden: task.persisted? && !task.description?), rows: 1, placeholder: "Description", data: { task_target: "attribute display", action: "focusout->task#autoSave" } %>
+    <%= form.text_field :title, id: dom_id(task, :title), class: "text-sm bg-transparent border-none ring-0 p-0", placeholder: "Title", data: { task_target: "attribute title" }, autocomplete: "off" %>
+    <%= form.text_area :description, id: dom_id(task, :description), class: class_names("text-xs bg-transparent border-none ring-0 p-0 resize-none h-6", hidden: task.persisted? && !task.description?), rows: 1, placeholder: "Description", data: { task_target: "attribute display" }, autocomplete: "off" %>
 
     <div class="flex">
-      <%= form.date_field :due_date, id: dom_id(task, :due_date), class: class_names("bg-transparent border-none ring-0 p-0", hidden: task.persisted? && !task.due_date), data: { task_target: "attribute display", action: "input->task#autoSave" } %>
-      <%= form.time_field :due_time, id: dom_id(task, :due_time), class: class_names("bg-transparent border-none ring-0 p-0", hidden: task.persisted? && !task.due_time), data: { task_target: "attribute display", action: "input->task#autoSave" } %>
+      <%= form.date_field :due_date, id: dom_id(task, :due_date), class: class_names("bg-transparent border-none ring-0 p-0", hidden: task.persisted? && !task.due_date), data: { task_target: "attribute display", action: "input->task#autoSave" }, autocomplete: "off" %>
+      <%= form.time_field :due_time, id: dom_id(task, :due_time), class: class_names("bg-transparent border-none ring-0 p-0", hidden: task.persisted? && !task.due_time), data: { task_target: "attribute display", action: "input->task#autoSave" }, autocomplete: "off" %>
     </div>
   </div>
 <% end %>
