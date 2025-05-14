@@ -6,7 +6,8 @@ const CSRF_TOKEN_SELECTOR = "[name='csrf-token']";
 
 export default class extends Controller {
   static values = {id: Number};
-  static targets = ["attribute", "complete", "domId", "display", "form", "title"];
+  static targets = ["attribute", "complete", "domId", "display", "form", "title", "dragHandle", "description"];
+  static classes = [ "hidden"]
 
   connect() {
     this.initializeDebouncedMethods();
@@ -30,32 +31,30 @@ export default class extends Controller {
   }
 
   showInputs() {
-    console.log("show inputs")
     this.displayTargets.forEach(input => input.classList.remove("hidden"));
+    this.dragHandleTarget.classList.remove("opacity-0");
+    this.element.classList.remove("drag-handle");
+    this.dragHandleTarget.classList.add("drag-handle");
   }
 
   handleKeydown(event) {
     if (event.key === "Escape") return this.element.blur();
     if (event.key === "ArrowUp") return this._moveUp(event);
     if (event.key === "ArrowDown") return this._moveDown(event);
-
+    // Any key from the task opens the form, other than escape or arrow up/down
     if (this._taskHasFocus()) return this._focusTitle();
 
     if (this._titleHasFocus()) {
+      // 'Enter' from the title input submits the current form and inserts a new task
       if (event.key === "Enter") return this._submitAndInsertNew(event);
+      // 'Backspace' from the title deletes the task if the title is empty, and puts focus on the previous task
       if (event.key === "Backspace") return this._deleteAndRefocus(event);
     }
 
     if (document.activeElement === this.descriptionTarget) {
+      // from the description input, shift + enter submits the form
       if (event.key === "Enter" && event.shiftKey) return this._submitAndInsertNew(event);
     }
-
-    // Any key from the task opens the form, other than escape or arrow up/down
-
-    // 'Enter' from the title input submits the current form and inserts a new task
-    // from the description input, shift + enter submits the form
-
-    // 'Backspace' from the title deletes the task if the title is empty, and puts focus on the previous task
   }
 
   _taskHasFocus() {
@@ -64,7 +63,7 @@ export default class extends Controller {
 
   _focusTitle() {
     if (this._titleHasFocus()) return;
-    console.log("focusing title")
+
     this.titleTarget.focus();
   }
 
@@ -105,6 +104,9 @@ export default class extends Controller {
     if (this._hasActiveFocus()) return;
 
     this.displayTargets.forEach(input => input.value === "" ? input.classList.add("hidden") : null);
+    this.dragHandleTarget.classList.add("opacity-0");
+    this.element.classList.add("drag-handle");
+    this.dragHandleTarget.classList.remove("drag-handle");
   }
 
   hideSelf() {
@@ -165,7 +167,7 @@ export default class extends Controller {
   }
 
   submitForm() {
-    if (this._isEmpty()) return;
+    if (this._isEmpty() || this._hasActiveFocus()) return;
 
     const formElement = this.formTarget;
     const formData = new FormData(formElement);
@@ -211,13 +213,15 @@ export default class extends Controller {
   focusOut() {
     if (this._hasActiveFocus()) return;
 
-    this.element.classList.remove("bg-neutral-800");
+    requestAnimationFrame(() => {
+      this.element.classList.remove("bg-neutral-800");
 
-    if (this._shouldRemove()) {
-      this.element.remove();
-    } else {
-      this.hideInputs();
-      this.renderSafely();
-    }
+      if (this._shouldRemove()) {
+        this.element.remove();
+      } else {
+        this.hideInputs();
+        this.renderSafely();
+      }
+    })
   }
 }

@@ -1,6 +1,6 @@
-<div id="<%= dom_id(task) %>" class="flex p-1 hover:bg-neutral-800" tabindex="0" data-id="<%= task.id %>" data-controller="task" data-action="focusout->task#focusOut focusin->task#focusIn" data-task-list-target="task">
-  <div class="flex items-center cursor-pointer">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="drag-handle text-gray-400" xmlns="http://www.w3.org/2000/svg">
+<div id="<%= dom_id(task) %>" class="flex p-1 hover:bg-neutral-800 drag-handle focus:outline-none" draggable="true" tabindex="0" data-id="<%= task.id %>" data-controller="task" data-action="focusout->task#focusOut focusin->task#focusIn" data-task-list-target="task">
+  <div class="flex items-center cursor-grab drag-handle opacity-0" draggable="true" data-task-target="dragHandle">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="text-gray-400" xmlns="http://www.w3.org/2000/svg">
       <circle cx="6"  cy="7"  r="1" fill="currentColor"/>
       <circle cx="12" cy="7"  r="1" fill="currentColor"/>
       <circle cx="6"  cy="12" r="1" fill="currentColor"/>

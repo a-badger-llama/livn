@@ -11,9 +11,11 @@ export default class extends Controller {
       onEnd: this.updatePositions.bind(this),
       onMove: this.handleMove.bind(this),
       // chosenClass: "opacity-100",
-      ghostClass: "opacity-0",
+      // ghostClass: "opacity-0",
     })
     document.addEventListener("turbo:before-stream-render", this.updatePositions.bind(this))
+    document.addEventListener("dragstart", this.dragStart.bind(this))
+    document.addEventListener("dragend", this.dragEnd.bind(this))
   }
 
   updatePositions(event) {
@@ -32,7 +34,6 @@ export default class extends Controller {
   }
 
   handleMove(event) {
-    console.log(event)
     // Remove existing underline
     document.querySelectorAll('.drop-indicator').forEach(el => el.remove());
 
@@ -46,5 +47,25 @@ export default class extends Controller {
     } else {
       event.to.insertBefore(dropIndicator, event.related);
     }
+  }
+
+  dragStart(event) {
+    document.activeElement.classList.add("cursor-grabbing")
+    // focus the task target being moved
+    this.taskTargets.forEach(task => {
+      if (task.dataset.id == event.target.dataset.id) {
+        task.focus()
+      }
+    })
+  }
+
+  dragEnd(event) {
+    document.activeElement.classList.remove("cursor-grabbing")
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.drop-indicator').forEach(el => el.remove());
+      this.taskTargets.forEach(task => {
+        task.blur()
+      })
+    })
   }
 }

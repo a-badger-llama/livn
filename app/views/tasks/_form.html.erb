@@ -4,8 +4,8 @@
   <%= form.check_box :completed, id: dom_id(task, :completed), class: "mr-2 mt-1 rounded-full bg-transparent border-1", data: { task_target: "complete", action: "input->task#toggleCompletion" }, autocomplete: "off" %>
 
   <div class="flex flex-grow flex-col justify-center" data-action="focusin->task#showInputs">
-    <%= form.text_field :title, id: dom_id(task, :title), class: "text-sm bg-transparent border-none ring-0 p-0", placeholder: "Title", data: { task_target: "attribute title" }, autocomplete: "off" %>
-    <%= form.text_area :description, id: dom_id(task, :description), class: class_names("text-xs bg-transparent border-none ring-0 p-0 resize-none h-6", hidden: task.persisted? && !task.description?), rows: 1, placeholder: "Description", data: { task_target: "attribute display" }, autocomplete: "off" %>
+    <%= form.text_field :title, id: dom_id(task, :title), class: "cursor-default text-sm bg-transparent border-none ring-0 p-0", placeholder: "Title", data: { task_target: "attribute title" }, autocomplete: "off" %>
+    <%= form.text_area :description, id: dom_id(task, :description), class: class_names("text-xs bg-transparent border-none ring-0 p-0 resize-none h-6", hidden: task.persisted? && !task.description?), rows: 1, placeholder: "Description", data: { task_target: "attribute description display" }, autocomplete: "off" %>
 
     <div class="flex">
       <%= form.date_field :due_date, id: dom_id(task, :due_date), class: class_names("bg-transparent border-none ring-0 p-0", hidden: task.persisted? && !task.due_date), data: { task_target: "attribute display", action: "input->task#autoSave" }, autocomplete: "off" %>
