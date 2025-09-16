@@ -324,8 +324,8 @@ GEM
     prefixed_ids (1.8.1)
       hashids (>= 1.0.0, < 2.0.0)
       rails (>= 6.0.0)
-    pretender (0.5.0)
-      actionpack (>= 6.1)
+    pretender (0.6.0)
+      actionpack (>= 7.1)
     prettyprint (0.2.0)
     prism (1.4.0)
     propshaft (1.1.0)
@@ -579,7 +579,7 @@ DEPENDENCIES
   pay (~> 9.0)
   pg
   prefixed_ids (~> 1.2)
-  pretender (~> 0.4)
+  pretender (~> 0.6)
   propshaft (~> 1.0)
   puma (~> 6.0)
   pundit (~> 2.1)
@@ -732,7 +732,7 @@ CHECKSUMS
   prawn (2.5.0) sha256=f4e20e3b4f30bf5b9ae37dad15eb421831594553aa930b2391b0fa0a99c43cb6
   prawn-table (0.2.2) sha256=336d46e39e003f77bf973337a958af6a68300b941c85cb22288872dc2b36addb
   prefixed_ids (1.8.1) sha256=cc327f946a6fc6a610246aa957d6c3b170bfaa1170c8deb445fa466356a6adbb
-  pretender (0.5.0) sha256=02120f25bc1c2b98468e136cec9e841360935dcc291158195b0cd073ff8fad77
+  pretender (0.6.0) sha256=d4528df42dd0dc5424b5d077a23435341d31ddee09bc54c8301691f55afda63d
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prism (1.4.0) sha256=dc0e3e00e93160213dc2a65519d9002a4a1e7b962db57d444cf1a71565bb703e
   propshaft (1.1.0) sha256=d389361faf66aeb17e8d204828962c1e506edd14a1a17adb3fa475435c070f6b
